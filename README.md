@@ -1,20 +1,32 @@
-# 📊 Data evaluation template
+import streamlit as st
+import plotly.express as px
+import pandas as pd
 
-A simple Streamlit app showing how to evaluate and annotate data, using dataframes
-and charts. 
+df = pd.read_csv('data/dau.csv')
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://data-evaluation-template.streamlit.app/)
+st.empty()
+# Add a title and intro text
+st.title('Метрики продуктовой команды DAU')
 
-### How to run it on your own machine
+st.markdown("> **DAU** — количество уникальных девайсов, которые посещали страницу и взаимодействовали с контентом. Считается по наиболее сильному идентификатору пользователя (user_id)")
+if st.session_state.role == 'Analyst':
+    st.code("uniqIf(user_id, event in ('show', 'click', 'interact')) as dau")
+with st.expander("Где посмотреть?"):
+    fig = px.area(df, x="date_utc_mnt", y="DAU", color="group")
+    st.plotly_chart(fig, theme=None, use_container_width=True)
+    st.markdown("Ссылки на дашборды:")
+    st.markdown('''
+- [General](https://www.youtube.com/watch?v=oHg5SJYRHA0)
+- [KPI](https://yandex.com)
+    ''')
+st.divider()
 
-1. Install the requirements
-
-   ```
-   $ pip install -r requirements.txt
-   ```
-
-2. Run the app
-
-   ```
-   $ streamlit run streamlit_app.py
-   ```
+st.markdown("> **TimeSpent** — суммарное количество времени в секундах")
+if st.session_state.role == 'Analyst':
+    st.code("sum(total_duration_sec) as ts")
+with st.expander("Где посмотреть?"):
+    st.markdown('''
+- Где-то
+- Где-то еще
+    ''')
+st.divider()
